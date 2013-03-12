@@ -20,7 +20,7 @@ module Merit
       methods = %w(badge_ids badges points
         add_badge rm_badge
         add_points substract_points)
-      methods.each { |method| delegate method, to: :_sash }
+      methods.each { |method| delegate method, :to => :_sash }
     end
 
     def _merit_orm_specific_config
@@ -40,7 +40,7 @@ module Merit
     end
 
     def _merit_define_badge_related_entries_method
-      meritable_class_name = caller[1][/`.*'/][8..-3]
+      meritable_class_name = caller[1][/`.*'/][8..-3] rescue 'user'
       Badge._define_related_entries_method(meritable_class_name)
     end
 

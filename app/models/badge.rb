@@ -44,8 +44,8 @@ class Badge
     # entries with certain badge. For instance, Badge.find(3).users
     def _define_related_entries_method(meritable_class_name)
       define_method(:"#{meritable_class_name.underscore.pluralize}") do
-        sashes = BadgesSash.where(badge_id: self.id).pluck(:sash_id)
-        meritable_class_name.constantize.where(sash_id: sashes)
+        sashes = BadgesSash.where(:badge_id => self.id).select(:sash_id).map(&:sash_id)
+        meritable_class_name.constantize.where(:sash_id => sashes)
       end
     end
   end

@@ -21,7 +21,7 @@ class MeritUnitTest < ActiveSupport::TestCase
     rule.badge_name = 'inexistent'
     assert_raise(Merit::BadgeNotFound) { rule.badge }
 
-    badge = Badge.create(id: 98, name: 'test-badge-98')
+    badge = Badge.create(:id => 98, :name => 'test-badge-98')
     rule.badge_name = badge.name
     assert_equal Badge.find(98), rule.badge
   end
@@ -64,7 +64,7 @@ class MeritUnitTest < ActiveSupport::TestCase
   test "Badge#last_granted returns recently granted badges" do
     # Create sashes, badges and badges_sashes
     sash = Sash.create
-    badge = Badge.create(id: 20, name: 'test-badge-21')
+    badge = Badge.create(:id => 20, :name => 'test-badge-21')
     sash.add_badge badge.id
     BadgesSash.last.update_attribute :created_at, 1.day.ago
     sash.add_badge badge.id
@@ -73,10 +73,10 @@ class MeritUnitTest < ActiveSupport::TestCase
     BadgesSash.last.update_attribute :created_at, 15.days.ago
 
     # Test method options
-    assert_equal Badge.last_granted(since_date: Time.now), []
-    assert_equal Badge.last_granted(since_date: 1.week.ago), [badge]
-    assert_equal Badge.last_granted(since_date: 2.weeks.ago).count, 2
-    assert_equal Badge.last_granted(since_date: 2.weeks.ago, limit: 1), [badge]
+    assert_equal Badge.last_granted(:since_date => Time.now), []
+    assert_equal Badge.last_granted(:since_date => 1.week.ago), [badge]
+    assert_equal Badge.last_granted(:since_date => 2.weeks.ago).count, 2
+    assert_equal Badge.last_granted(:since_date => 2.weeks.ago, :limit => 1), [badge]
   end
 
   test "Merit::Score.top_scored returns scores leaderboard" do
@@ -87,10 +87,10 @@ class MeritUnitTest < ActiveSupport::TestCase
     sash_2.add_points(5); sash_2.add_points(5)
 
     # Test method options
-    assert_equal Merit::Score.top_scored(table_name: :sashes),
+    assert_equal Merit::Score.top_scored(:table_name => :sashes),
       [{"sash_id"=>1, "sum_points"=>20, 0=>1, 1=>20},
        {"sash_id"=>2, "sum_points"=>10, 0=>2, 1=>10}]
-    assert_equal Merit::Score.top_scored(table_name: :sashes, limit: 1),
+    assert_equal Merit::Score.top_scored(:table_name => :sashes, :limit => 1),
       [{"sash_id"=>1, "sum_points"=>20, 0=>1, 1=>20}]
   end
 
@@ -98,7 +98,7 @@ class MeritUnitTest < ActiveSupport::TestCase
     class WeirdRankRules
       include Merit::RankRulesMethods
       def initialize
-        set_rank level: 1, to: User, level_name: :clown
+        set_rank :level => 1, :to => User, :level_name => :clown
       end
     end
     assert_raises Merit::RankAttributeNotDefined do

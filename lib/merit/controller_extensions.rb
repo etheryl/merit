@@ -16,12 +16,12 @@ module Merit
 
     def log_merit_action
       Merit::Action.create(
-        user_id:       send(Merit.current_user_method).try(:id),
-        action_method: action_name,
-        action_value:  params[:value],
-        had_errors:    had_errors?,
-        target_model:  controller_path,
-        target_id:     target_id
+        :user_id       => send(Merit.current_user_method).try(:id),
+        :action_method => action_name,
+        :action_value  => params[:value],
+        :had_errors    => had_errors?,
+        :target_model  => controller_path,
+        :target_id     => target_id
       ).id
     end
 
